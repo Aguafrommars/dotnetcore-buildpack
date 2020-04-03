@@ -67,9 +67,6 @@ if [ -n "$(cat $PROJECT_FILE | grep 'netcoreapp2.0')" ]; then
 fi
 export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
 
-rm ${BUILD_DIR}/heroku_output/wwwroot/settings.json
-cp ${BUILD_DIR}/heroku_output/wwwroot/heroku-settings.json ${BUILD_DIR}/heroku_output/wwwroot/settings.json
-
 if [ -f ${BUILD_DIR}/Procfile ] && grep -q '^web:' ${BUILD_DIR}/Procfile ; then
 	topic "WARNING"
 	echo "Be careful with custom Procfile" | indent
