@@ -68,7 +68,7 @@ if [ -z ${HOSTNAME:-} ]; then
 	HOSTNAME="theidserver.herokuapp.com"
 else
 	topic "Update config files"
-	info "update configuration files with hostname ${HOSTNAME}"
+	info "update configuration files with hostname '${HOSTNAME}'"
 
 	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.Production.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
@@ -79,7 +79,7 @@ fi
 
 
 info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
-dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64
+dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64 /nr:false
 
 if [ -f ${BUILD_DIR}/Procfile ] && grep -q '^web:' ${BUILD_DIR}/Procfile ; then
 	topic "WARNING"
