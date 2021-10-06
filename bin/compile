@@ -65,13 +65,18 @@ fi
 export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
 
 if [ -z ${HOSTNAME:-} ]; then
+	HOSTNAME="theidserver.herokuapp.com"
+else
+	topic "Update config files"
 	info "update configuration files with hostname ${HOSTNAME}"
+
 	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.Production.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
 	sed "s/https:\/\/localhost:5443/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.Production.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
 	sed "s/https:\/\/localhost:5443/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.Production.json
 fi
+
 
 info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
 dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64
