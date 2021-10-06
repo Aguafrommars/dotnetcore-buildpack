@@ -64,13 +64,13 @@ fi
 
 export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
 
-if [ -z ${HOSNAME:-} ]; then
-	info "update configuration files with hostname ${HOSNAME}"
-	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.Production.json
-	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
-	sed "s/https:\/\/localhost:5443/https:\/\/${HOSNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.Production.json
-	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
-	sed "s/https:\/\/localhost:5443/https:\/\/${HOSNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.Production.json
+if [ -z ${HOSTNAME:-} ]; then
+	info "update configuration files with hostname ${HOSTNAME}"
+	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.Production.json
+	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
+	sed "s/https:\/\/localhost:5443/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.Production.json
+	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
+	sed "s/https:\/\/localhost:5443/https:\/\/${HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.Production.json
 fi
 
 info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
