@@ -70,11 +70,11 @@ else
 	topic "Update config files"
 	info "update configuration files with hostname '${HEROKU_HOSTNAME}'"
 
-	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.Production.json
+	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
-	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.Production.json
+	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
-	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.Production.json
+	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 fi
 
 
