@@ -102,6 +102,3 @@ else
 web: cd \$HOME/heroku_output && ./${PROJECT_NAME}
 EOT
 fi
-
-
-sed "s/https:\/\/theidserver-duende.herokuapp.com/https:\/\/theidserver.herokuapp.com/g" appsettings.heroku-duende.json >> appsettings.heroku.json
