@@ -65,7 +65,7 @@ fi
 export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
 
 if [ -z ${HEROKU_HOSTNAME:-} ]; then
-	HOSTNAME="theidserver.herokuapp.com"
+	info "The HEROKU_HOSTNAME config var should be set to override config on build."
 else
 	topic "Update config files"
 	info "update configuration files with hostname '${HEROKU_HOSTNAME}'"
@@ -79,13 +79,16 @@ else
 	if [ -f src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
 		rm src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	fi
-	sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json
+	if [ $ASPNETCORE_ENVIRONMENT -ne "heroku" ]; then
+		sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json
+  else
+		sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json
+  fi
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
 	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
 	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 fi
-
 
 info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
 dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64 /nr:false
@@ -99,3 +102,6 @@ else
 web: cd \$HOME/heroku_output && ./${PROJECT_NAME}
 EOT
 fi
+
+
+sed "s/https:\/\/theidserver-duende.herokuapp.com/https:\/\/theidserver.herokuapp.com/g" appsettings.heroku-duende.json >> appsettings.heroku.json
