@@ -70,7 +70,7 @@ else
 	topic "Update config files"
 	info "update configuration files with hostname '${HEROKU_HOSTNAME}'"
 
-	if [ -f src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json ] && [ ${ASPNETCORE_ENVIRONMENT:-} -ne "heroku" ]; then
+	if [ -f src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json ] && [ "$ASPNETCORE_ENVIRONMENT" != "heroku" ]; then
 		rm src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	fi
 	if [ -f src/Aguacongas.TheIdServer.IS4/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
@@ -79,7 +79,7 @@ else
 	if [ -f src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
 		rm src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	fi
-	if [ ${ASPNETCORE_ENVIRONMENT:-} -ne "heroku" ]; then
+	if [ "$ASPNETCORE_ENVIRONMENT" != "heroku" ]; then
 		sed "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json >> src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.$ASPNETCORE_ENVIRONMENT.json
   else
 		sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.BlazorApp/wwwroot/appsettings.heroku.json
