@@ -58,10 +58,6 @@ fi
 topic "Project Name"
 info $PROJECT_NAME
 
-if [ -n "$(cat $PROJECT_FILE | grep 'net6.0')" ]; then
-	dotnet workload install microsoft-net-sdk-blazorwebassembly-aot
-fi
-
 export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
 
 if [ -z ${HEROKU_HOSTNAME:-} ]; then
