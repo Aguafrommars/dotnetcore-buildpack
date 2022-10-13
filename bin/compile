@@ -81,8 +81,8 @@ else
 	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 fi
 
-info "update github nuget source"
-dotnet nuget update source github -s https://nuget.pkg.github.com/bUnit-dev/index.json -u Aguacongas -p "${GITHUB_FEED_TOKEN}" --store-password-in-clear-text
+#info "update github nuget source"
+#dotnet nuget update source github -s https://nuget.pkg.github.com/bUnit-dev/index.json -u Aguacongas -p "${GITHUB_FEED_TOKEN}" --store-password-in-clear-text
 
 info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
 dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64 /nr:false -p:SourceRevisionId=$SOURCE_VERSION
