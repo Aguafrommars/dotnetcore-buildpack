@@ -82,7 +82,7 @@ else
 fi
 
 #info "update github nuget source"
-#dotnet nuget update source github -s https://nuget.pkg.github.com/bUnit-dev/index.json -u Aguacongas -p "${GITHUB_FEED_TOKEN}" --store-password-in-clear-text
+dotnet nuget update source github -s https://nuget.pkg.github.com/bUnit-dev/index.json -u Aguacongas -p "${GITHUB_FEED_TOKEN}" --store-password-in-clear-text
 
 info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
 dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64 /nr:false -p:SourceRevisionId=$SOURCE_VERSION
