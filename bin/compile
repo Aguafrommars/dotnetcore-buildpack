@@ -35,7 +35,11 @@ export PATH="${BUILD_DIR}/.heroku/dotnet:${PATH}"
 
 cd $BUILD_DIR
 
+info "Installing wasm-tools"
+dotnet workload install wasm-tools
+
 if [ -f ${BUILD_DIR}/dotnet-tools.json ] || [ -f ${BUILD_DIR}/.config/dotnet-tools.json ]; then
+	info "Restoring dotnet-tools"
 	dotnet tool restore
 fi
 
