@@ -65,15 +65,10 @@ else
 	topic "Update config files"
 	info "update configuration files with hostname '${HEROKU_HOSTNAME}'"
 
-	if [ -f src/Aguacongas.TheIdServer.IS4/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
-		rm src/Aguacongas.TheIdServer.IS4/appsettings.$ASPNETCORE_ENVIRONMENT.json
-	fi
 	if [ -f src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
 		rm src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	fi
 
-        sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/wwwroot/heroku-metadata.json
-	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.IS4/appsettings.json >> src/Aguacongas.TheIdServer.IS4/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
 	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
 fi
