@@ -15,6 +15,7 @@ BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 
 mkdir -p $BUILD_DIR/.profile.d
 cp $BP_DIR/profile/* $BUILD_DIR/.profile.d/
+rm -rf $CACHE_DIR
 
 ### Load dependencies
 source $BP_DIR/lib/utils
