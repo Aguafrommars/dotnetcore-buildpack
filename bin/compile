@@ -15,34 +15,14 @@ BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 
 mkdir -p $BUILD_DIR/.profile.d
 cp $BP_DIR/profile/* $BUILD_DIR/.profile.d/
-rm -rf $CACHE_DIR
 
-### Load dependencies
 source $BP_DIR/lib/utils
 
 export_env_dir "$ENV_DIR"
-export NUGET_XMLDOC_MODE=${NUGET_XMLDOC_MODE:-skip}
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=${DOTNET_SKIP_FIRST_TIME_EXPERIENCE:-1}
-export DOTNET_CLI_TELEMETRY_OPTOUT=${DOTNET_CLI_TELEMETRY_OPTOUT:-1}
-
-DOTNET_SDK_VERSION=${DOTNET_SDK_VERSION:-5.0.401}
-DOTNET_RUNTIME_VERSION=${DOTNET_RUNTIME_VERSION:-5.0.10}
-BUILD_CONFIGURATION=${BUILD_CONFIGURATION:-Release}
-
-info "Installing dotnet"
-install_dotnet $BUILD_DIR $CACHE_DIR $DOTNET_SDK_VERSION $DOTNET_RUNTIME_VERSION
 
 export PATH="${BUILD_DIR}/.heroku/dotnet:${PATH}"
 
 cd $BUILD_DIR
-
-info "Installing wasm-tools"
-dotnet workload install wasm-tools
-
-if [ -f ${BUILD_DIR}/dotnet-tools.json ] || [ -f ${BUILD_DIR}/.config/dotnet-tools.json ]; then
-	info "Restoring dotnet-tools"
-	dotnet tool restore
-fi
 
 if [ -z ${PROJECT_FILE:-} ]; then
 	PROJECT_FILE=$(x=$(dirname $(find ${BUILD_DIR} -maxdepth 5 -iname Startup.cs -o -iname Program.cs -o -iname Program.fs | head -1)); while [[ "$x" =~ $BUILD_DIR ]] ; do find "$x" -maxdepth 1 -name *.fsproj -o -name *.csproj; x=`dirname "$x"`; done)
@@ -58,27 +38,19 @@ fi
 topic "Project Name"
 info $PROJECT_NAME
 
-export NUGET_PACKAGES="${CACHE_DIR}/nuget/cache"
-
 if [ -z ${HEROKU_HOSTNAME:-} ]; then
 	info "The HEROKU_HOSTNAME config var should be set to override config on build."
 else
 	topic "Update config files"
 	info "update configuration files with hostname '${HEROKU_HOSTNAME}'"
 
-	if [ -f src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
-		rm src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
+	if [ -f heroku_output/appsettings.$ASPNETCORE_ENVIRONMENT.json ]; then
+		rm heroku_output/appsettings.$ASPNETCORE_ENVIRONMENT.json
 	fi
 
-	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/wwwroot/heroku-metadata.json 
-	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" src/Aguacongas.TheIdServer.Duende/appsettings.json >> src/Aguacongas.TheIdServer.Duende/appsettings.$ASPNETCORE_ENVIRONMENT.json
+	sed -i "s/https:\/\/theidserver.herokuapp.com/https:\/\/${HEROKU_HOSTNAME}/g" heroku_output/wwwroot/heroku-metadata.json 
+	sed "s/https:\/\/localhost:5443/https:\/\/${HEROKU_HOSTNAME}/g" heroku_output/appsettings.json >> heroku_output/appsettings.$ASPNETCORE_ENVIRONMENT.json
 fi
-
-#info "update github nuget source"
-#dotnet nuget update source github -s https://nuget.pkg.github.com/bUnit-dev/index.json -u Aguacongas -p "${GITHUB_FEED_TOKEN}" --store-password-in-clear-text
-
-info "publish ${PROJECT_FILE} for ${BUILD_CONFIGURATION}"	
-dotnet publish $PROJECT_FILE --output ${BUILD_DIR}/heroku_output --configuration ${BUILD_CONFIGURATION} --runtime linux-x64 --sc -p:SourceRevisionId=$SOURCE_VERSION
 
 if [ -f ${BUILD_DIR}/Procfile ] && grep -q '^web:' ${BUILD_DIR}/Procfile ; then
 	topic "WARNING"
